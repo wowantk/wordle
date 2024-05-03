@@ -86,17 +86,46 @@ struct LetterGrid: View {
 }
 
 struct LetterView: View {
+    @State
+    var filled: Bool = false
     var letter: Character = " "
+    var scaleAmount: CGFloat = 1.4
     var body: some View {
-        RoundedRectangle(cornerRadius: 4)
-            .stroke(Color.gray.opacity(0.3), style: .init(lineWidth: 2))
+        Color.clear
+            .overlay {
+                RoundedRectangle(cornerRadius: 4)
+                    .stroke(strokeColor, style: .init(lineWidth: 2))
+                    .opacity(filled ? 0 : 1)
+                    .animation(.none, value: filled)
+            }
+            .overlay {
+                RoundedRectangle(cornerRadius: 4)
+                    .stroke(strokeColor, style: .init(lineWidth: 2))
+                    .opacity(filled ? 1 : 0)
+                    .scaleEffect(filled ? 1 : scaleAmount)
+            }
             .aspectRatio(1, contentMode: .fit)
             .overlay {
                 Text(String(letter))
                     .font(.system(size: 100))
+                    .fontWeight(.heavy)
+                    .scaleEffect(filled ? 1 : scaleAmount)
                     .minimumScaleFactor(0.1)
                     .padding(2)
             }
+            .onChange(of: letter) { newLetter in
+                withAnimation {
+                    if letter.isWhitespace && !newLetter.isWhitespace {
+                        filled = true
+                    } else if !letter.isWhitespace && newLetter.isWhitespace {
+                        filled = false
+                    }
+                }
+            }
+    }
+    
+    var strokeColor: Color {
+        letter.isWhitespace ? Color.gray.opacity(0.3) : Color.black
     }
 }
 
