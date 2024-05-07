@@ -1,27 +1,46 @@
 //
 //  ContentView.swift
 //  Wurdle
-//
-//  Created by Volodymyr Drobot on 29.04.2024.
-//
 
 import SwiftUI
 
-struct ContentView: View {
-    @State
+final class GuessState: ObservableObject {
+    @Published
     var guess: String = ""
+    @Published
+    var guesses: [String] = []
+    
+    func validateGuess() {
+        while guess.count > 5 {
+            guess.removeLast()
+        }
+        guess = guess.trimmingCharacters(in: .letters.inverted)
+    }
+    
+    func checkCompleteGuess() {
+        if guess.count == 5 {
+            guesses.append(guess)
+            guess = ""
+        }
+    }
+}
+
+struct ContentView: View {
+   
+    @ObservedObject
+    var state = GuessState()
+    
     var body: some View {
         Header()
         ScrollView {
-            TextInput(text: $guess)
+            TextInput(text: $state.guess, onEneterPressed: {
+                state.checkCompleteGuess()
+            })
                 .opacity(0)
-            LetterGrid(guess: guess)
+            LetterGrid(guess: state.guess, guesses: state.guesses)
                 .padding()
-        }.onChange(of: guess) {
-            while guess.count > 5 {
-                guess.removeLast()
-            }
-            guess = guess.trimmingCharacters(in: .letters.inverted)
+        }.onChange(of: state.guess) {
+            state.validateGuess()
         }
     }
 }
@@ -46,12 +65,19 @@ struct TextInput: View {
     var text: String
     @FocusState
     var isFocused: Bool
+    let onEneterPressed: () -> Void
     var body: some View {
         TextField("", text: $text)
             .autocorrectionDisabled(true)
             .textInputAutocapitalization(.characters)
             .keyboardType(.asciiCapable)
             .focused($isFocused)
+            .onChange(of: isFocused, perform: { newValue in
+                if !newValue {
+                    onEneterPressed()
+                    isFocused = true
+                }
+            })
             .onAppear(perform: {
                 isFocused = true
             })
@@ -61,9 +87,8 @@ struct TextInput: View {
 struct LetterGrid: View {
     let width = 5
     let height = 6
-    @State
-    var activeRow = 0
-    var guess: String
+    let guess: String
+    let guesses: [String]
     var body: some View {
         VStack {
             ForEach(0..<height, id: \.self) { row in
@@ -77,10 +102,15 @@ struct LetterGrid: View {
     }
     
     private func character(row: Int, col: Int) -> Character {
-        guard row == activeRow else { return " " }
-        guard col < guess.count else { return " " }
-        return guess[
-            guess.index(guess.startIndex, offsetBy: col)
+        var string: String = ""
+        if row < guesses.count  {
+            string = guesses[row]
+        } else if row == guesses.count {
+            string = guess
+        }
+        guard col < string.count else { return " " }
+        return string[
+            string.index(string.startIndex, offsetBy: col)
         ]
     }
 }
