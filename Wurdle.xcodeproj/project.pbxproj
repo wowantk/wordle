@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C6B6469E2BF02F39007922FA /* GuessState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B6469D2BF02F39007922FA /* GuessState.swift */; };
+		C6B646A02BF02F4D007922FA /* LetterStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B6469F2BF02F4D007922FA /* LetterStatus.swift */; };
 		C6E4B5C32BE021A0009013F6 /* WurdleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E4B5C22BE021A0009013F6 /* WurdleApp.swift */; };
 		C6E4B5C52BE021A0009013F6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E4B5C42BE021A0009013F6 /* ContentView.swift */; };
 		C6E4B5C72BE021A0009013F6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C6E4B5C62BE021A0009013F6 /* Assets.xcassets */; };
@@ -14,6 +16,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C6B6469D2BF02F39007922FA /* GuessState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuessState.swift; sourceTree = "<group>"; };
+		C6B6469F2BF02F4D007922FA /* LetterStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterStatus.swift; sourceTree = "<group>"; };
 		C6E4B5BF2BE021A0009013F6 /* Wurdle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wurdle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6E4B5C22BE021A0009013F6 /* WurdleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WurdleApp.swift; sourceTree = "<group>"; };
 		C6E4B5C42BE021A0009013F6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -55,6 +59,8 @@
 				C6E4B5C42BE021A0009013F6 /* ContentView.swift */,
 				C6E4B5C62BE021A0009013F6 /* Assets.xcassets */,
 				C6E4B5C82BE021A0009013F6 /* Preview Content */,
+				C6B6469D2BF02F39007922FA /* GuessState.swift */,
+				C6B6469F2BF02F4D007922FA /* LetterStatus.swift */,
 			);
 			path = Wurdle;
 			sourceTree = "<group>";
@@ -137,6 +143,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6B6469E2BF02F39007922FA /* GuessState.swift in Sources */,
+				C6B646A02BF02F4D007922FA /* LetterStatus.swift in Sources */,
 				C6E4B5C52BE021A0009013F6 /* ContentView.swift in Sources */,
 				C6E4B5C32BE021A0009013F6 /* WurdleApp.swift in Sources */,
 			);

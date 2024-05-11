@@ -4,27 +4,6 @@
 
 import SwiftUI
 
-final class GuessState: ObservableObject {
-    @Published
-    var guess: String = ""
-    @Published
-    var guesses: [String] = []
-    
-    func validateGuess() {
-        while guess.count > 5 {
-            guess.removeLast()
-        }
-        guess = guess.trimmingCharacters(in: .letters.inverted)
-    }
-    
-    func checkCompleteGuess() {
-        if guess.count == 5 {
-            guesses.append(guess)
-            guess = ""
-        }
-    }
-}
-
 struct ContentView: View {
    
     @ObservedObject
@@ -88,7 +67,7 @@ struct LetterGrid: View {
     let width = 5
     let height = 6
     let guess: String
-    let guesses: [String]
+    let guesses: [Guess]
     var body: some View {
         VStack {
             ForEach(0..<height, id: \.self) { row in
@@ -101,24 +80,24 @@ struct LetterGrid: View {
         }
     }
     
-    private func character(row: Int, col: Int) -> Character {
-        var string: String = ""
+    private func character(row: Int, col: Int) -> LetterGuess {
+        var guess: Guess
         if row < guesses.count  {
-            string = guesses[row]
+            guess = guesses[row]
         } else if row == guesses.count {
-            string = guess
+            guess = Guess.inProgress(self.guess)
+        } else {
+            return .blank
         }
-        guard col < string.count else { return " " }
-        return string[
-            string.index(string.startIndex, offsetBy: col)
-        ]
+        guard col < guess.count else { return .blank }
+        return guess[row]
     }
 }
 
 struct LetterView: View {
     @State
     var filled: Bool = false
-    var letter: Character = " "
+    var letter: LetterGuess = .blank
     var scaleAmount: CGFloat = 1.4
     var body: some View {
         Color.clear
@@ -136,7 +115,7 @@ struct LetterView: View {
             }
             .aspectRatio(1, contentMode: .fit)
             .overlay {
-                Text(String(letter))
+                Text(String(letter.char))
                     .font(.system(size: 100))
                     .fontWeight(.heavy)
                     .scaleEffect(filled ? 1 : scaleAmount)
@@ -145,9 +124,9 @@ struct LetterView: View {
             }
             .onChange(of: letter) { newLetter in
                 withAnimation {
-                    if letter.isWhitespace && !newLetter.isWhitespace {
+                    if letter.char.isWhitespace && !newLetter.char.isWhitespace {
                         filled = true
-                    } else if !letter.isWhitespace && newLetter.isWhitespace {
+                    } else if !letter.char.isWhitespace && newLetter.char.isWhitespace {
                         filled = false
                     }
                 }
@@ -155,7 +134,7 @@ struct LetterView: View {
     }
     
     var strokeColor: Color {
-        letter.isWhitespace ? Color.gray.opacity(0.3) : Color.black
+        letter.char.isWhitespace ? Color.gray.opacity(0.3) : Color.black
     }
 }
 
